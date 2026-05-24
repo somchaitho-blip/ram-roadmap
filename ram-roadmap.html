@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แผนการเรียน รัฐศาสตร์ แผน C — ม.รามคำแหง</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d0f14;
+  --surface: #161921;
+  --surface2: #1e2330;
+  --surface3: #252b3a;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.14);
+  --text: #e8eaf0;
+  --text-muted: #7a8099;
+  --text-dim: #4a5168;
+  --accent: #5b8cff;
+  --accent-dim: rgba(91,140,255,0.12);
+  --accent2: #3ecf8e;
+  --accent2-dim: rgba(62,207,142,0.1);
+  --sat: #a78bfa;
+  --sat-dim: rgba(167,139,250,0.12);
+  --sun: #fb7185;
+  --sun-dim: rgba(251,113,133,0.1);
+  --mon: #fbbf24;
+  --mon-dim: rgba(251,191,36,0.1);
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(91,140,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(91,140,255,0.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;}
+.wrap{max-width:980px;margin:0 auto;padding:2.5rem 1.5rem 5rem;position:relative;z-index:1;}
+
+/* HEADER */
+.header{margin-bottom:2.5rem;}
+.header-top{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem;}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.eyebrow::before{content:'';display:block;width:24px;height:1px;background:var(--accent);}
+h1{font-family:'Playfair Display',serif;font-size:clamp(22px,4vw,32px);font-weight:700;color:var(--text);line-height:1.2;margin-bottom:6px;}
+.subtitle{font-size:14px;color:var(--text-muted);}
+.status-badge{background:var(--accent2-dim);border:1px solid rgba(62,207,142,0.25);border-radius:var(--radius-sm);padding:12px 18px;text-align:right;}
+.status-label{font-size:11px;color:var(--accent2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px;}
+.status-val{font-size:18px;font-weight:600;color:var(--text);}
+.status-sub{font-size:12px;color:var(--text-muted);}
+
+/* PROGRESS */
+.progress-section{margin-bottom:2rem;}
+.progress-labels{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.progress-labels span{font-size:12px;color:var(--text-muted);font-family:'IBM Plex Mono',monospace;}
+.progress-track{height:6px;background:var(--surface2);border-radius:99px;overflow:hidden;margin-bottom:1.5rem;}
+.progress-fill{height:100%;width:33%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:99px;animation:fillBar 1.2s ease-out;}
+@keyframes fillBar{from{width:0;}}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;transition:border-color .2s,transform .2s;cursor:default;}
+.stat-card:hover{border-color:var(--border2);transform:translateY(-2px);}
+.stat-num{font-size:28px;font-weight:700;color:var(--text);line-height:1;margin-bottom:4px;}
+.stat-num.green{color:var(--accent2);}
+.stat-num.blue{color:var(--accent);}
+.stat-num.zero{color:var(--accent2);}
+.stat-lbl{font-size:12px;color:var(--text-muted);}
+
+/* TIMELINE OVERVIEW */
+.timeline-wrap{margin-bottom:2.5rem;}
+.timeline{display:flex;gap:0;overflow-x:auto;padding-bottom:8px;}
+.timeline::-webkit-scrollbar{height:4px;}
+.timeline::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px;}
+.tl-item{flex:1;min-width:120px;cursor:pointer;position:relative;}
+.tl-item:not(:last-child)::after{content:'';position:absolute;right:0;top:22px;width:1px;height:20px;background:var(--border2);}
+.tl-bar{height:44px;background:var(--surface2);margin:0 4px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;color:var(--accent);transition:background .2s,transform .2s;border:1px solid var(--border);}
+.tl-item:hover .tl-bar{background:var(--surface3);transform:translateY(-2px);}
+.tl-item.tl-active .tl-bar{background:var(--accent-dim);border-color:rgba(91,140,255,.35);color:var(--accent);}
+.tl-label{text-align:center;font-size:11px;color:var(--text-muted);margin-top:6px;padding:0 4px;}
+.tl-dots{display:flex;justify-content:center;gap:3px;margin-top:4px;}
+.tl-dot{width:5px;height:5px;border-radius:50%;}
+
+/* SECTION */
+.section-header{display:flex;align-items:center;gap:12px;margin-bottom:1.25rem;}
+.section-header h2{font-size:15px;font-weight:600;color:var(--text);}
+.section-header .line{flex:1;height:1px;background:var(--border);}
+.section-header .tag{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:.08em;}
+
+/* TABS */
+.roadmap-block{margin-bottom:2.5rem;}
+.tabs{display:flex;gap:4px;overflow-x:auto;padding-bottom:1px;margin-bottom:1.5rem;border-bottom:1px solid var(--border);}
+.tabs::-webkit-scrollbar{height:0;}
+.tab-btn{flex-shrink:0;background:none;border:none;padding:8px 16px;font-family:'Sarabun',sans-serif;font-size:13px;font-weight:500;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .2s,border-color .2s;white-space:nowrap;}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+/* TERM HEADER */
+.term-header{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:1.25rem;flex-wrap:wrap;}
+.term-title-txt{font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.term-desc-txt{font-size:13px;color:var(--text-muted);max-width:560px;}
+.term-credits-pill{flex-shrink:0;background:var(--accent-dim);border:1px solid rgba(91,140,255,.2);border-radius:99px;padding:4px 14px;font-size:12px;font-weight:600;color:var(--accent);font-family:'IBM Plex Mono',monospace;}
+
+/* TABLE */
+.tbl-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+table{width:100%;border-collapse:collapse;}
+thead th{background:var(--surface2);padding:10px 16px;text-align:left;font-size:10px;font-weight:600;color:var(--text-dim);letter-spacing:.1em;text-transform:uppercase;font-family:'IBM Plex Mono',monospace;border-bottom:1px solid var(--border);}
+thead th.center{text-align:center;}
+tbody tr{border-bottom:1px solid var(--border);transition:background .15s;cursor:pointer;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:rgba(91,140,255,0.05);}
+tbody td{padding:12px 16px;font-size:13px;vertical-align:middle;}
+tbody td.code{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-dim);white-space:nowrap;}
+tbody td.name{color:var(--text);}
+tbody td.center{text-align:center;}
+.click-hint{font-size:10px;color:var(--text-dim);text-align:right;margin-top:6px;font-family:'IBM Plex Mono',monospace;}
+
+/* PILLS */
+.day-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:600;border:1px solid;}
+.day-sat{background:var(--sat-dim);color:var(--sat);border-color:rgba(167,139,250,.25);}
+.day-sun{background:var(--sun-dim);color:var(--sun);border-color:rgba(251,113,133,.22);}
+.day-mon{background:var(--mon-dim);color:var(--mon);border-color:rgba(251,191,36,.22);}
+.type-badge{display:inline-block;padding:2px 9px;border-radius:4px;font-size:11px;font-weight:500;}
+.type-core{background:rgba(91,140,255,.1);color:#93b4ff;}
+.type-major{background:rgba(167,139,250,.1);color:#c4b5fd;}
+.type-elect{background:rgba(62,207,142,.1);color:#6ee7b7;}
+.type-fac{background:rgba(251,191,36,.1);color:#fcd34d;}
+
+/* TERM NOTE */
+.term-note{margin-top:12px;padding:10px 14px;background:var(--surface2);border-left:3px solid var(--accent);border-radius:0 var(--radius-sm) var(--radius-sm) 0;font-size:12px;color:var(--text-muted);line-height:1.6;}
+
+/* SWAP TOOL */
+.swap-block{margin-top:1.5rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.swap-header{display:flex;align-items:center;gap:10px;padding:14px 18px;cursor:pointer;user-select:none;border-bottom:1px solid transparent;transition:border-color .2s;}
+.swap-header:hover{background:rgba(255,255,255,.02);}
+.swap-header.open{border-bottom-color:var(--border);}
+.swap-header-icon{font-size:16px;}
+.swap-header-title{font-size:13px;font-weight:600;color:var(--text);}
+.swap-header-sub{font-size:12px;color:var(--text-muted);margin-left:auto;}
+.swap-chevron{color:var(--text-dim);transition:transform .3s;font-size:14px;margin-left:8px;}
+.swap-chevron.open{transform:rotate(180deg);}
+.swap-body{padding:16px 18px;display:none;}
+.swap-body.open{display:block;}
+.swap-desc{font-size:12px;color:var(--text-muted);margin-bottom:14px;line-height:1.6;}
+.swap-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+@media(max-width:600px){.swap-grid{grid-template-columns:1fr;}}
+.swap-grid label{font-size:11px;color:var(--text-dim);letter-spacing:.08em;text-transform:uppercase;font-family:'IBM Plex Mono',monospace;display:block;margin-bottom:6px;}
+.swap-select{width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:9px 12px;font-family:'Sarabun',sans-serif;font-size:13px;color:var(--text);outline:none;cursor:pointer;transition:border-color .2s;}
+.swap-select:focus{border-color:var(--accent);}
+.swap-btn{background:var(--accent-dim);border:1px solid rgba(91,140,255,.3);color:var(--accent);font-family:'Sarabun',sans-serif;font-size:13px;font-weight:600;padding:9px 20px;border-radius:var(--radius-sm);cursor:pointer;transition:background .2s,transform .15s;}
+.swap-btn:hover{background:rgba(91,140,255,.2);transform:translateY(-1px);}
+.swap-btn:active{transform:scale(.98);}
+.swap-result{margin-top:10px;padding:10px 14px;background:var(--surface2);border-radius:var(--radius-sm);font-size:12px;color:var(--accent2);display:none;}
+
+/* RULES */
+.rules-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;}
+.rule-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;cursor:pointer;transition:border-color .2s,transform .2s;}
+.rule-card:hover{border-color:var(--border2);transform:translateY(-2px);}
+.rule-card.expanded{border-color:rgba(91,140,255,.3);}
+.rule-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:12px;}
+.rule-icon.blue{background:var(--accent-dim);}
+.rule-icon.green{background:var(--accent2-dim);}
+.rule-icon.amber{background:var(--mon-dim);}
+.rule-card h3{font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.rule-card .rule-short{font-size:12.5px;color:var(--text-muted);line-height:1.65;}
+.rule-card .rule-expand{font-size:12px;color:var(--text-dim);margin-top:10px;padding-top:10px;border-top:1px solid var(--border);line-height:1.7;display:none;}
+.rule-card.expanded .rule-expand{display:block;}
+.rule-expand-hint{font-size:10px;color:var(--text-dim);font-family:'IBM Plex Mono',monospace;margin-top:8px;display:flex;align-items:center;gap:4px;}
+
+/* LEGEND */
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:1rem;}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted);}
+.legend-dot{width:8px;height:8px;border-radius:2px;}
+
+/* MODAL OVERLAY */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .25s;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal-box{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);max-width:480px;width:100%;padding:28px;position:relative;transform:translateY(16px);transition:transform .25s;}
+.modal-overlay.open .modal-box{transform:translateY(0);}
+.modal-close{position:absolute;top:14px;right:14px;background:none;border:none;color:var(--text-muted);font-size:20px;cursor:pointer;line-height:1;padding:4px 8px;border-radius:4px;transition:color .2s,background .2s;}
+.modal-close:hover{color:var(--text);background:var(--surface2);}
+.modal-code{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--accent);letter-spacing:.08em;margin-bottom:8px;}
+.modal-name{font-size:18px;font-weight:600;color:var(--text);margin-bottom:16px;line-height:1.3;}
+.modal-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;}
+.modal-row:last-of-type{border-bottom:none;}
+.modal-row .lbl{color:var(--text-muted);}
+.modal-row .val{color:var(--text);font-weight:500;}
+.modal-tip{margin-top:16px;padding:12px;background:var(--surface2);border-radius:var(--radius-sm);font-size:12px;color:var(--text-muted);line-height:1.6;border-left:3px solid var(--accent2);}
+
+/* FOOTER */
+footer{margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border);text-align:center;font-size:12px;color:var(--text-dim);}
+footer strong{color:var(--text-muted);}
+
+/* ANIMATE */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+.fade-up{animation:fadeUp .4s ease both;}
+@keyframes rowIn{from{opacity:0;transform:translateX(-6px);}to{opacity:1;transform:translateX(0);}}
+.row-anim{animation:rowIn .25s ease both;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HEADER -->
+<header class="header fade-up">
+  <div class="header-top">
+    <div class="title-block">
+      <div class="eyebrow">ม.รามคำแหง · แผน C · บริหารรัฐกิจ</div>
+      <h1>แผนการเรียน<br>รัฐศาสตรบัณฑิต</h1>
+      <p class="subtitle">วิศวกรโยธาประจำไซต์งาน · สอบเฉพาะ เสาร์–อาทิตย์–จันทร์ เท่านั้น</p>
+    </div>
+    <div class="status-badge">
+      <div class="status-label">เทียบโอนแล้ว</div>
+      <div class="status-val">42 หน่วยกิต</div>
+      <div class="status-sub">เหลือเรียนจริง 84 นก. · 28 วิชา</div>
+    </div>
+  </div>
+
+  <div class="progress-section">
+    <div class="progress-labels">
+      <span>ความก้าวหน้ารวม</span>
+      <span>33% · 42/126 นก. เสร็จแล้ว</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill"></div></div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-num green">42</div><div class="stat-lbl">หน่วยกิตเทียบโอน ✓</div></div>
+      <div class="stat-card"><div class="stat-num">84</div><div class="stat-lbl">หน่วยกิตต้องเรียน (28 วิชา)</div></div>
+      <div class="stat-card"><div class="stat-num blue">5</div><div class="stat-lbl">ภาคการศึกษา (1 ปี 9 เดือน)</div></div>
+      <div class="stat-card"><div class="stat-num zero">0</div><div class="stat-lbl">วันธรรมดาที่ต้องสอบ</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- TIMELINE OVERVIEW -->
+<section class="timeline-wrap">
+  <div class="section-header">
+    <h2>ภาพรวมเส้นทาง 5 ภาคการศึกษา</h2>
+    <div class="line"></div>
+    <div class="tag">คลิกดูแต่ละเทอม</div>
+  </div>
+  <div class="timeline" id="timeline"></div>
+</section>
+
+<!-- ROADMAP -->
+<section class="roadmap-block">
+  <div class="section-header">
+    <h2>รายวิชาแต่ละภาคการศึกษา</h2>
+    <div class="line"></div>
+    <div class="tag">คลิกแถวเพื่อดูรายละเอียด</div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--sat)"></div>เสาร์</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--sun)"></div>อาทิตย์</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--mon)"></div>จันทร์</div>
+    <div class="legend-item" style="margin-left:8px"><div class="legend-dot" style="background:#93b4ff"></div>วิชาแกน</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#c4b5fd"></div>วิชาเอกบังคับ</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#6ee7b7"></div>วิชาเอกเลือก</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#fcd34d"></div>วิชาเลือกในคณะ</div>
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+  <div class="term-header" id="termHeader"></div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>รหัสวิชา</th>
+          <th>ชื่อวิชา</th>
+          <th class="center">วันสอบ</th>
+          <th class="center">ประเภท</th>
+        </tr>
+      </thead>
+      <tbody id="tBody"></tbody>
+    </table>
+  </div>
+  <div class="click-hint">👆 คลิกที่แถวรายวิชา เพื่อดูรายละเอียดและเคล็ดลับการสอบ</div>
+  <div class="term-note" id="termNote"></div>
+
+  <!-- SWAP TOOL -->
+  <div class="swap-block">
+    <div class="swap-header" id="swapHeader" onclick="toggleSwap()">
+      <span class="swap-header-icon">🔄</span>
+      <span class="swap-header-title">เครื่องมือสลับวิชา (ม.ร.30 Swap Tool)</span>
+      <span class="swap-header-sub">กรณีตารางสอบชนวันธรรมดา</span>
+      <span class="swap-chevron" id="swapChevron">▼</span>
+    </div>
+    <div class="swap-body" id="swapBody">
+      <p class="swap-desc">หากตรวจพบว่าวิชาใดในเทอมนี้เปลี่ยนวันสอบเป็น "วันธรรมดา" (อังคาร–ศุกร์) ให้เลือกสลับกับวิชาอื่นในแผนทันที แล้วกดยืนยันเพื่ออัปเดตแผน</p>
+      <div class="swap-grid">
+        <div>
+          <label>วิชาที่มีปัญหา (เทอมปัจจุบัน)</label>
+          <select class="swap-select" id="swapSource">
+            <option value="">-- เลือกวิชาที่วันสอบผิด --</option>
+          </select>
+        </div>
+        <div>
+          <label>สลับกับวิชา (เทอมอื่น)</label>
+          <select class="swap-select" id="swapTarget">
+            <option value="">-- เลือกวิชาจากเทอมอื่น --</option>
+          </select>
+        </div>
+      </div>
+      <button class="swap-btn" onclick="executeSwap()">จำลองการสลับวิชาและอัปเดตแผน</button>
+      <div class="swap-result" id="swapResult"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ม.ร.30 RULES -->
+<section style="margin-bottom:2.5rem">
+  <div class="section-header">
+    <h2>ระเบียบ ม.ร.30 ที่ต้องรู้</h2>
+    <div class="line"></div>
+    <div class="tag">คลิกการ์ดเพื่อดูรายละเอียด</div>
+  </div>
+  <div class="rules-grid">
+    <div class="rule-card" onclick="toggleRule(this)">
+      <div class="rule-icon blue">📚</div>
+      <h3>โควตาหน่วยกิตต่อเทอม</h3>
+      <div class="rule-short">เทอมปกติ ลงได้ 9–22 นก. / Summer สูงสุด 9 นก.</div>
+      <div class="rule-expand">
+        <strong style="color:var(--text)">รายละเอียดตาม ม.ร.30:</strong><br>
+        • ภาคเรียนที่ 1 และ 2: ลงทะเบียนได้ <span style="color:var(--accent)">9–22 หน่วยกิต</span><br>
+        • ภาคฤดูร้อน (Summer): สูงสุด <span style="color:var(--mon)">9 หน่วยกิต</span><br>
+        • เทอมที่ "ขอจบ": ลงได้ถึง <span style="color:var(--accent2)">30 หน่วยกิต</span><br><br>
+        แผนนี้ใช้ 18 / 21 / 9 / 21 / 15 นก. — อยู่ในกรอบทุกเทอม ✓
+      </div>
+      <div class="rule-expand-hint">▾ คลิกเพื่อดูรายละเอียด</div>
+    </div>
+    <div class="rule-card" onclick="toggleRule(this)">
+      <div class="rule-icon green">✅</div>
+      <h3>สิทธิ์ "ขอจบการศึกษา"</h3>
+      <div class="rule-short">กา "ขอจบ" เมื่อเหลือ ≤30 นก. → สอบซ้ำซ้อนได้</div>
+      <div class="rule-expand">
+        <strong style="color:var(--text)">วิธีใช้สิทธิ์:</strong><br>
+        1. ตอนลงทะเบียนเทอมสุดท้าย กาช่อง <span style="color:var(--accent2)">"ขอจบการศึกษา"</span><br>
+        2. ต้องเหลือวิชาไม่เกิน <span style="color:var(--accent)">30 หน่วยกิต</span> (เทอม 4 เหลือ 15 นก. ✓)<br>
+        3. ได้สิทธิ์สอบซ้ำซ้อนสูงสุด <span style="color:var(--mon)">4 วิชา</span> หากวันสอบชนกัน<br><br>
+        ⚠️ ใช้ในปีที่ 2 เทอม 2 เท่านั้น
+      </div>
+      <div class="rule-expand-hint">▾ คลิกเพื่อดูรายละเอียด</div>
+    </div>
+    <div class="rule-card" onclick="toggleRule(this)">
+      <div class="rule-icon amber">🕐</div>
+      <h3>ตารางคาบสอบ ม.ร.30</h3>
+      <div class="rule-short">คาบ A 09:30–12:00 / คาบ B 14:00–16:30</div>
+      <div class="rule-expand">
+        <strong style="color:var(--text)">ข้อควรรู้:</strong><br>
+        • <span style="color:var(--accent)">คาบ A (เช้า)</span>: 09:30 – 12:00 น.<br>
+        • <span style="color:var(--mon)">คาบ B (บ่าย)</span>: 14:00 – 16:30 น.<br>
+        • สอบต่อเนื่องทุกวัน <span style="color:var(--sun)">ไม่มีวันหยุดราชการ</span><br>
+        • วันเดียวสอบได้สูงสุด 2 วิชา (A+B)<br><br>
+        วางแผนเดินทางล่วงหน้า ไซต์งานต้องแจ้งวันลาสอบไว้ก่อน
+      </div>
+      <div class="rule-expand-hint">▾ คลิกเพื่อดูรายละเอียด</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <strong>รัฐศาสตรบัณฑิต บริหารรัฐกิจ แผน C · ม.รามคำแหง</strong><br>
+  อ้างอิงตามเกณฑ์และปฏิทินการศึกษา ปีการศึกษา 2568–2569
+</footer>
+
+</div>
+
+<!-- COURSE DETAIL MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModalBtn()">✕</button>
+    <div class="modal-code" id="mCode"></div>
+    <div class="modal-name" id="mName"></div>
+    <div class="modal-row"><span class="lbl">วันสอบ</span><span class="val" id="mDay"></span></div>
+    <div class="modal-row"><span class="lbl">ประเภทวิชา</span><span class="val" id="mType"></span></div>
+    <div class="modal-row"><span class="lbl">ภาคเรียน</span><span class="val" id="mTerm"></span></div>
+    <div class="modal-row"><span class="lbl">หน่วยกิต</span><span class="val">3 หน่วยกิต</span></div>
+    <div class="modal-tip" id="mTip"></div>
+  </div>
+</div>
+
+<script>
+const terms = [
+  {
+    id:'t1',short:'ปี 1 เทอม 1',title:'ปีที่ 1 ภาคเรียนที่ 1',
+    credits:18,count:6,
+    note:'เทอมเปิดตัว เริ่มอย่างผ่อนคลาย วิชาระดับความง่ายสูง ล็อกวันสอบเฉพาะ เสาร์–อาทิตย์–จันทร์ครบทุกตัว ยังไม่มีวิชา POL4xxx ระดับยาก',
+    courses:[
+      {code:'POL1101',name:'การเมืองการปกครองไทย',day:'เสาร์',type:'core',tip:'วิชาง่าย อ่านชีทสรุปย้อนหลัง 3 ปีก็พอ เนื้อหาค่อนข้างคงที่'},
+      {code:'POL2107',name:'การเมืองเปรียบเทียบเบื้องต้น',day:'อาทิตย์',type:'core',tip:'เน้นท่องจำระบบการปกครองของประเทศตัวอย่าง ทำข้อสอบเก่าอย่างน้อย 5 ชุด'},
+      {code:'POL2303',name:'การบริหารทรัพยากรมนุษย์ในภาครัฐ',day:'อาทิตย์',type:'major',tip:'เนื้อหาใกล้เคียงการบริหารงานบุคคลในภาคเอกชน ใช้ประสบการณ์ทำงานช่วยเชื่อมโยงได้ดี'},
+      {code:'POL2108',name:'หลักปฏิบัติทางการปกครองและธรรมาภิบาลฯ',day:'จันทร์',type:'major',tip:'เน้นหลักธรรมาภิบาล 6 ประการ และกฎหมายระเบียบราชการ ทำชีทสรุปตาราง'},
+      {code:'POL2301',name:'องค์การและการบริหารในภาครัฐ',day:'จันทร์',type:'major',tip:'เนื้อหาทฤษฎีองค์การ วิศวกรจะคุ้นเคยกับ org chart อยู่แล้ว ได้เปรียบมาก'},
+      {code:'POL3311',name:'การเมืองและระบบราชการ',day:'จันทร์',type:'major',tip:'โครงสร้างราชการไทย กระทรวง ทบวง กรม เน้นท่องจำโครงสร้างให้แม่น'},
+    ]
+  },
+  {
+    id:'t2',short:'ปี 1 เทอม 2',title:'ปีที่ 1 ภาคเรียนที่ 2',
+    credits:21,count:7,
+    note:'ลุยวิชาสาย IT และวางแผนเชิงกลยุทธ์ กลุ่ม POL4xxx ด้านเทคโนโลยีสารสนเทศ ตรงทักษะวิศวกรโดยตรง',
+    courses:[
+      {code:'POL2200',name:'ความสัมพันธ์ระหว่างประเทศเบื้องต้น',day:'อาทิตย์',type:'core',tip:'เน้นองค์กรระหว่างประเทศ UN ASEAN WTO อ่านชีทเน้นๆ ไม่ต้องลงลึกมาก'},
+      {code:'POL3301',name:'นโยบายสาธารณะ',day:'เสาร์',type:'major',tip:'กระบวนการนโยบาย 5 ขั้นตอน จำให้ขึ้นใจ ข้อสอบถามแทบทุกปี'},
+      {code:'POL3302',name:'การวางแผนในภาครัฐ',day:'เสาร์',type:'major',tip:'ใกล้เคียงการวางแผนโครงการก่อสร้าง ใช้ความรู้วิศวกรเชื่อมโยงได้เลย'},
+      {code:'POL4315',name:'คอมพิวเตอร์เพื่อการบริหารการพัฒนา',day:'อาทิตย์',type:'elect',tip:'วิชาง่ายมากสำหรับวิศวกร เนื้อหา IT พื้นฐานในภาครัฐ น่าจะได้คะแนนดี'},
+      {code:'POL4312',name:'เทคโนโลยีการบริหาร',day:'จันทร์',type:'elect',tip:'e-Government และการนำเทคโนโลยีมาใช้ในราชการ คุ้นเคยจากการทำงาน'},
+      {code:'POL4320',name:'ระบบสารสนเทศเพื่อการจัดการในภาครัฐ',day:'จันทร์',type:'elect',tip:'MIS สำหรับหน่วยงานรัฐ ถ้าเคยใช้ ERP หรือ BIM ยิ่งเข้าใจง่าย'},
+      {code:'POL4323',name:'เทคโนโลยีสารสนเทศเพื่อการบริหารรัฐกิจ',day:'จันทร์',type:'elect',tip:'ต่อยอดจาก POL4320 เน้น big data และ digital transformation ภาครัฐ'},
+    ]
+  },
+  {
+    id:'sum1',short:'ปี 1 ซัมเมอร์',title:'ปีที่ 1 ภาคฤดูร้อน',
+    credits:9,count:3,
+    note:'เต็มโควตา Summer (9 นก. สูงสุด) เน้นวิชาบริหารโครงการทั้งหมด ตรงสายวิศวกรโยธาโดยตรง',
+    courses:[
+      {code:'POL4348',name:'การกำหนดและประเมินโครงการ',day:'เสาร์',type:'elect',tip:'Project Appraisal ภาครัฐ ใช้ความรู้โครงการก่อสร้างมาเชื่อมโยงได้ดีมาก เป็นวิชาที่น่าจะชอบ'},
+      {code:'POL4349',name:'การบริหารโครงการภาครัฐ',day:'อาทิตย์',type:'elect',tip:'Project Management ภาครัฐ คล้าย PMBOK แต่บริบทราชการไทย ได้เปรียบมากในฐานะวิศวกร'},
+      {code:'POL3314',name:'การบริหารชุมชนเมือง (Smart City)',day:'จันทร์',type:'fac',tip:'ผังเมืองและการพัฒนาเมืองอัจฉริยะ ตรงสายงานโยธามากที่สุด น่าจะชอบและทำได้ดี'},
+    ]
+  },
+  {
+    id:'t3',short:'ปี 2 เทอม 1',title:'ปีที่ 2 ภาคเรียนที่ 1',
+    credits:21,count:7,
+    note:'เจาะลึกระบบงบประมาณ การคลัง และสารสนเทศท้องถิ่น วิชาระดับ 4000 ครบชุด',
+    courses:[
+      {code:'POL2302',name:'ระเบียบปฏิบัติราชการ',day:'เสาร์',type:'major',tip:'ระเบียบสำนักนายกฯ ว่าด้วยงานสารบรรณ และระเบียบต่างๆ เน้นท่อง จำแบบแผนผัง'},
+      {code:'POL3300',name:'การบริหารการคลัง',day:'อาทิตย์',type:'major',tip:'งบประมาณแผ่นดิน กระบวนการจัดทำงบฯ ถ้าเคยทำ BOQ หรือประมาณราคาจะเชื่อมโยงได้'},
+      {code:'POL4350',name:'การประเมินผลโครงการภาครัฐ',day:'อาทิตย์',type:'elect',tip:'ต่อยอดจาก POL4348 เน้น KPI และการวัดผล ใช้ตัวอย่างโครงการโยธาที่เคยทำได้เลย'},
+      {code:'POL4389',name:'สารสนเทศเพื่อการบริหารงานส่วนท้องถิ่น',day:'จันทร์',type:'fac',tip:'ระบบ IT สำหรับ อปท. GIS และฐานข้อมูลท้องถิ่น เกี่ยวข้องกับงานสายโยธาในพื้นที่'},
+      {code:'POL4188',name:'การบริหารข้อมูลในทางรัฐศาสตร์',day:'เสาร์',type:'fac',tip:'Data analytics ภาครัฐ วิศวกรมีพื้นฐาน Excel และ data ดี น่าจะได้คะแนนสูง'},
+      {code:'POL4346',name:'การกำหนดและวิเคราะห์นโยบายสาธารณะ',day:'เสาร์',type:'fac',tip:'ต่อยอดจาก POL3301 เพิ่มเรื่องวิเคราะห์ผลกระทบนโยบาย ทำชีทสรุปเปรียบเทียบ'},
+      {code:'POL4358',name:'นโยบายและบริการสาธารณะสำหรับศตวรรษที่ 21',day:'อาทิตย์',type:'fac',tip:'Public Service innovation เนื้อหาทันสมัย เชื่อมกับ Smart City ที่เรียนไปแล้ว'},
+    ]
+  },
+  {
+    id:'t4',short:'ปี 2 เทอม 2 (ขอจบ)',title:'ปีที่ 2 ภาคเรียนที่ 2 — ขอจบการศึกษา',
+    credits:15,count:5,
+    note:'กา "ขอจบ" ทันทีตอนลงทะเบียน เรียนเบาลง 5 วิชา ปิดท้ายด้วยวิจัยและปรัชญา สำเร็จการศึกษาอย่างเป็นทางการ',
+    courses:[
+      {code:'POL2300',name:'การบริหารรัฐกิจเบื้องต้น',day:'เสาร์',type:'core',tip:'วิชาพื้นฐานแต่เรียนเทอมสุดท้าย เนื้อหาง่าย ทบทวนจากที่เรียนมาทั้งหมดได้เลย'},
+      {code:'POL2106',name:'ปรัชญาการเมืองเบื้องต้น',day:'อาทิตย์',type:'core',tip:'ปรัชญานักคิดตะวันตก Plato Aristotle Locke Rousseau เน้นท่องชื่อและแนวคิดสำคัญ'},
+      {code:'POL4100',name:'หลักและวิธีการวิจัยทางรัฐศาสตร์',day:'จันทร์',type:'core',tip:'เขียนโครงร่างวิจัย (Research Proposal) วิศวกรมีพื้นฐาน scientific method ดี ได้เปรียบมาก'},
+      {code:'POL4359',name:'การจัดการความขัดแย้งในภาครัฐ',day:'จันทร์',type:'fac',tip:'Conflict Management ในองค์กรภาครัฐ เชื่อมโยงกับประสบการณ์บริหารไซต์งานได้ดี'},
+      {code:'POL4197',name:'การประเมินคุณธรรมและความโปร่งใส (ITA)',day:'เสาร์',type:'fac',tip:'ITA = Integrity and Transparency Assessment เนื้อหาปัจจุบัน ใช้ข่าวสารล่าสุดประกอบ'},
+    ]
+  }
+];
+
+const tips = {
+  core: 'วิชาแกนบังคับ — ต้องสอบผ่านเพื่อจบการศึกษา',
+  major: 'วิชาเอกบังคับ — หัวใจของสาย บริหารรัฐกิจ',
+  elect: 'วิชาเอกเลือก — เลือกตามความถนัด เน้นสาย IT',
+  fac: 'วิชาเลือกในคณะ — ขยายขอบเขตความรู้ภาพกว้าง'
+};
+const dayClass = {'เสาร์':'day-sat','อาทิตย์':'day-sun','จันทร์':'day-mon'};
+const typeClass = {core:'type-core',major:'type-major',elect:'type-elect',fac:'type-fac'};
+const typeName = {core:'วิชาแกน',major:'วิชาเอกบังคับ',elect:'วิชาเอกเลือก',fac:'วิชาเลือกในคณะ'};
+const dayColors = {'เสาร์':'var(--sat)','อาทิตย์':'var(--sun)','จันทร์':'var(--mon)'};
+
+let active = 't1';
+
+// TIMELINE
+function renderTimeline() {
+  const el = document.getElementById('timeline');
+  el.innerHTML = '';
+  terms.forEach(t => {
+    const dots = ['เสาร์','อาทิตย์','จันทร์'].map(d => {
+      const has = t.courses.some(c => c.day === d);
+      return `<div class="tl-dot" style="background:${has ? dayColors[d] : 'var(--surface3)'}"></div>`;
+    }).join('');
+    const div = document.createElement('div');
+    div.className = 'tl-item' + (t.id === active ? ' tl-active' : '');
+    div.innerHTML = `
+      <div class="tl-bar">${t.credits} นก.</div>
+      <div class="tl-label">${t.short}</div>
+      <div class="tl-dots">${dots}</div>
+    `;
+    div.onclick = () => { active = t.id; render(); };
+    el.appendChild(div);
+  });
+}
+
+// SWAP TOOL
+function populateSwap() {
+  const term = terms.find(t => t.id === active);
+  const src = document.getElementById('swapSource');
+  const tgt = document.getElementById('swapTarget');
+  src.innerHTML = '<option value="">-- เลือกวิชาที่วันสอบผิด --</option>';
+  tgt.innerHTML = '<option value="">-- เลือกวิชาจากเทอมอื่น --</option>';
+  term.courses.forEach(c => {
+    src.innerHTML += `<option value="${c.code}">${c.code} · ${c.name} (${c.day})</option>`;
+  });
+  terms.filter(t => t.id !== active).forEach(t => {
+    t.courses.forEach(c => {
+      tgt.innerHTML += `<option value="${t.id}|${c.code}">[${t.short}] ${c.code} · ${c.name} (${c.day})</option>`;
+    });
+  });
+  document.getElementById('swapResult').style.display = 'none';
+}
+
+function toggleSwap() {
+  const body = document.getElementById('swapBody');
+  const chevron = document.getElementById('swapChevron');
+  const header = document.getElementById('swapHeader');
+  const open = body.classList.toggle('open');
+  chevron.classList.toggle('open', open);
+  header.classList.toggle('open', open);
+}
+
+function executeSwap() {
+  const srcCode = document.getElementById('swapSource').value;
+  const tgtVal = document.getElementById('swapTarget').value;
+  const res = document.getElementById('swapResult');
+  if (!srcCode || !tgtVal) { res.style.cssText = 'display:block;color:var(--sun);'; res.textContent = '⚠️ กรุณาเลือกวิชาทั้งสองฝั่งก่อนสลับ'; return; }
+  const [tgtTermId, tgtCode] = tgtVal.split('|');
+  const curTerm = terms.find(t => t.id === active);
+  const tgtTerm = terms.find(t => t.id === tgtTermId);
+  const si = curTerm.courses.findIndex(c => c.code === srcCode);
+  const ti = tgtTerm.courses.findIndex(c => c.code === tgtCode);
+  const tmp = {...curTerm.courses[si]};
+  curTerm.courses[si] = {...tgtTerm.courses[ti]};
+  tgtTerm.courses[ti] = tmp;
+  res.style.cssText = 'display:block;color:var(--accent2);';
+  res.textContent = `✓ สลับ ${srcCode} ↔ ${tgtCode} เรียบร้อยแล้ว แผนอัปเดตแล้ว`;
+  render();
+}
+
+// MAIN RENDER
+function render() {
+  renderTimeline();
+
+  // tabs
+  const tabsEl = document.getElementById('tabs');
+  tabsEl.innerHTML = '';
+  terms.forEach(t => {
+    const b = document.createElement('button');
+    b.className = 'tab-btn' + (t.id === active ? ' active' : '');
+    b.textContent = t.short;
+    b.onclick = () => { active = t.id; render(); };
+    tabsEl.appendChild(b);
+  });
+
+  const term = terms.find(t => t.id === active);
+
+  document.getElementById('termHeader').innerHTML = `
+    <div>
+      <div class="term-title-txt">${term.title}</div>
+      <div class="term-desc-txt">${term.count} วิชา · รวม ${term.credits} หน่วยกิต</div>
+    </div>
+    <span class="term-credits-pill">${term.credits} นก.</span>
+  `;
+
+  const tbody = document.getElementById('tBody');
+  tbody.innerHTML = '';
+  term.courses.forEach((c, i) => {
+    const tr = document.createElement('tr');
+    tr.className = 'row-anim';
+    tr.style.animationDelay = (i * 0.04) + 's';
+    tr.innerHTML = `
+      <td class="code">${c.code}</td>
+      <td class="name">${c.name}</td>
+      <td class="center"><span class="day-pill ${dayClass[c.day]}">${c.day}</span></td>
+      <td class="center"><span class="type-badge ${typeClass[c.type]}">${typeName[c.type]}</span></td>
+    `;
+    tr.onclick = () => openModal(c, term.short);
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById('termNote').textContent = term.note;
+  populateSwap();
+}
+
+// MODAL
+function openModal(c, termShort) {
+  document.getElementById('mCode').textContent = c.code;
+  document.getElementById('mName').textContent = c.name;
+  document.getElementById('mDay').innerHTML = `<span class="day-pill ${dayClass[c.day]}" style="font-size:12px">${c.day}</span>`;
+  document.getElementById('mType').innerHTML = `<span class="type-badge ${typeClass[c.type]}">${typeName[c.type]}</span> <span style="color:var(--text-muted);font-size:12px;margin-left:6px">${tips[c.type]}</span>`;
+  document.getElementById('mTerm').textContent = termShort;
+  document.getElementById('mTip').innerHTML = `💡 <strong>เคล็ดลับสอบ:</strong> ${c.tip}`;
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(e) { if (e.target === document.getElementById('modal')) closeModalBtn(); }
+function closeModalBtn() { document.getElementById('modal').classList.remove('open'); }
+
+function toggleRule(el) { el.classList.toggle('expanded'); }
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalBtn(); });
+render();
+</script>
+</body>
+</html>
